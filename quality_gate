@@ -1,15 +1,14 @@
 pipeline {
-    agent any 
+    agent any
     tools {
         maven "MAVEN3"
         jdk "OracleJDK8"
-        
     }
 
     stages {
         stage('Fetch Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/hkhcoder/vprofile-project.git' 
+                git branch: 'main', url: 'https://github.com/hkhcoder/vprofile-project.git'
             }
         }
 
@@ -17,7 +16,7 @@ pipeline {
             steps {
                 sh 'mvn install -DskipTests'
             }
-            post {      
+            post {
                 success {
                     echo 'Archiving Artifacts now'
                     archiveArtifacts artifacts: '**/*.war'
@@ -39,7 +38,7 @@ pipeline {
 
         stage('Code Analysis with SonarQube') {
             environment {
-                scannerHome = tool 'sonar4.7'
+                scannerHome = tool name: 'sonar4.7', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
             }
             steps {
                 withSonarQubeEnv('sonar') {
@@ -52,6 +51,14 @@ pipeline {
                         -Dsonar.junit.reportsPath=target/surefire-reports/ \
                         -Dsonar.jacoco.reportsPath=target/jacoco.exec \
                         -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml"""
+                }
+            }
+        }
+
+        stage('Sonar Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
