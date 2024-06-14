@@ -66,3 +66,4 @@ ADMIN_PASSWORD=sdmin12
 echo "Nexus Repository Manager has been installed and started." > /opt/nexus_installation_info.txt
 echo "Access Nexus at http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):8081" >> /opt/nexus_installation_info.txt
 echo "The default admin password is: $ADMIN_PASSWORD" >> /opt/nexus_installation_info.txt
+    
