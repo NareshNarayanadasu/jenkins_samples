@@ -5,6 +5,12 @@ def COLOR_MAP = [
 
 pipeline {
     agent any
+    environment {
+        registryCredential = 'ecr:us-east-2:awscreds'   // ecr = ecr only : region of ecr : credential id in jenkins
+        appRegistry = '339712784679.dkr.ecr.us-east-2.amazonaws.com/vpofileappimg'        // ecr registry url 
+    
+        vprofilregistry = 'https://339712784679.dkr.ecr.us-east-2.amazonaws.com'     // ecr regirty url in https and remove registry name
+    }
     tools {
         maven "MAVEN3"
         jdk "OracleJDK8"
